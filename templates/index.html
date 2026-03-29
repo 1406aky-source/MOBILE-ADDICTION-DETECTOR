@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MindGuard — AI Mobile Addiction Detector</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header class="header">
+  <div class="header-inner">
+    <div class="logo">
+      <span class="logo-icon">🧠</span>
+      <span class="logo-text">MindGuard</span>
+      <span class="logo-badge">AI</span>
+    </div>
+    <nav class="nav">
+      <a href="#analyzer" class="nav-link active">Analyzer</a>
+      <a href="#dashboard" class="nav-link">Dashboard</a>
+      <a href="#schedule" class="nav-link">Schedule</a>
+      <a href="#about" class="nav-link">About</a>
+    </nav>
+    <div class="header-status">
+      <span class="status-dot"></span>
+      <span class="status-text">AI Models Ready</span>
+    </div>
+  </div>
+</header>
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="analyzer">
+  <div class="hero-bg-grid"></div>
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-label">Intelligent Behavioral AI</div>
+      <h1 class="hero-title">
+        Detect. Predict.<br/>
+        <span class="hero-accent">Reclaim Your Focus.</span>
+      </h1>
+      <p class="hero-sub">
+        An AI-powered system using machine learning, Bayesian classification, 
+        intelligent agents, and reinforcement learning to analyze your digital habits.
+      </p>
+    </div>
+
+    <!-- ===== INPUT FORM ===== -->
+    <div class="form-card" id="input-form">
+      <div class="form-header">
+        <h2>Enter Your Usage Data</h2>
+        <span class="form-subtitle">All fields contribute to your AI analysis</span>
+      </div>
+
+      <div class="form-grid">
+        <!-- Column 1: Time Usage -->
+        <div class="form-section">
+          <div class="section-label">⏱ Daily Time Usage</div>
+          <div class="input-group">
+            <label>Total Screen Time (hours/day)</label>
+            <input type="number" id="daily_hours" value="5" min="0" max="16" step="0.5" class="input-field">
+            <div class="input-range">
+              <input type="range" id="daily_hours_range" min="0" max="16" step="0.5" value="5">
+            </div>
+          </div>
+          <div class="input-group">
+            <label>Social Media Hours</label>
+            <input type="number" id="social_hours" value="2.5" min="0" max="12" step="0.5" class="input-field">
+          </div>
+          <div class="input-group">
+            <label>Study/Learning App Hours</label>
+            <input type="number" id="study_hours" value="0.5" min="0" max="8" step="0.5" class="input-field">
+          </div>
+          <div class="input-group">
+            <label>Gaming Hours</label>
+            <input type="number" id="gaming_hours" value="1" min="0" max="10" step="0.5" class="input-field">
+          </div>
+        </div>
+
+        <!-- Column 2: Behavioral -->
+        <div class="form-section">
+          <div class="section-label">🧠 Behavioral Patterns</div>
+          <div class="input-group">
+            <label>Sleep Hours per Night</label>
+            <input type="number" id="sleep_hours" value="6.5" min="0" max="12" step="0.5" class="input-field">
+          </div>
+          <div class="input-group">
+            <label>Late-Night Usage (nights/week)</label>
+            <input type="number" id="night_usage_days" value="4" min="0" max="7" step="1" class="input-field">
+          </div>
+          <div class="input-group">
+            <label>App Switches per Hour</label>
+            <input type="number" id="app_switches_per_hour" value="18" min="0" max="60" step="1" class="input-field">
+          </div>
+          <div class="input-group">
+            <label>Notification Clicks per Hour</label>
+            <input type="number" id="notification_clicks_per_hour" value="12" min="0" max="60" step="1" class="input-field">
+          </div>
+        </div>
+
+        <!-- Column 3: Context -->
+        <div class="form-section">
+          <div class="section-label">🌐 Context & Environment</div>
+          <div class="input-group">
+            <label>Days Tracked</label>
+            <input type="number" id="days_tracked" value="7" min="1" max="90" step="1" class="input-field">
+          </div>
+          <div class="input-group">
+            <label>Weekday Average (hours)</label>
+            <input type="number" id="weekday_avg_hours" value="4.5" min="0" max="16" step="0.5" class="input-field">
+          </div>
+          <div class="input-group">
+            <label>Weekend Average (hours)</label>
+            <input type="number" id="weekend_avg_hours" value="7" min="0" max="16" step="0.5" class="input-field">
+          </div>
+          <div class="input-group">
+            <label>Time of Day</label>
+            <select id="time_of_day" class="input-field">
+              <option value="morning">Morning</option>
+              <option value="afternoon" selected>Afternoon</option>
+              <option value="evening">Evening</option>
+              <option value="night">Night</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <button class="analyze-btn" id="analyze-btn" onclick="runAnalysis()">
+        <span class="btn-icon">🚀</span>
+        <span class="btn-text">Run AI Analysis</span>
+        <span class="btn-loader" id="btn-loader" style="display:none">⏳</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== RESULTS DASHBOARD ===== -->
+<section class="dashboard hidden" id="dashboard">
+  <div class="container">
+
+    <!-- Top KPI Row -->
+    <div class="kpi-row">
+      <!-- Addiction Level Card -->
+      <div class="kpi-card kpi-addiction" id="kpi-addiction">
+        <div class="kpi-label">Addiction Level</div>
+        <div class="kpi-value" id="addiction-level">—</div>
+        <div class="kpi-score" id="addiction-score">Score: —</div>
+        <div class="kpi-desc" id="addiction-desc">—</div>
+      </div>
+
+      <!-- Health Score Card -->
+      <div class="kpi-card kpi-health" id="kpi-health">
+        <div class="kpi-label">Digital Health Score</div>
+        <div class="health-ring-container">
+          <svg class="health-ring" viewBox="0 0 120 120">
+            <circle class="ring-bg" cx="60" cy="60" r="50" fill="none" stroke-width="10"/>
+            <circle class="ring-fill" id="health-ring-fill" cx="60" cy="60" r="50" fill="none" stroke-width="10"
+              stroke-dasharray="314" stroke-dashoffset="314" stroke-linecap="round"/>
+          </svg>
+          <div class="ring-text">
+            <div class="ring-score" id="health-score">—</div>
+            <div class="ring-grade" id="health-grade">—</div>
+          </div>
+        </div>
+        <div class="kpi-desc" id="health-status">—</div>
+      </div>
+
+      <!-- Prediction Card -->
+      <div class="kpi-card kpi-prediction" id="kpi-prediction">
+        <div class="kpi-label">Predicted Today</div>
+        <div class="kpi-value" id="pred-hours">—h</div>
+        <div class="pred-bar-wrap">
+          <div class="pred-bar" id="pred-bar"></div>
+        </div>
+        <div class="kpi-desc" id="pred-desc">—</div>
+      </div>
+
+      <!-- Cluster Card -->
+      <div class="kpi-card kpi-cluster" id="kpi-cluster">
+        <div class="kpi-label">User Archetype</div>
+        <div class="cluster-icon" id="cluster-icon">—</div>
+        <div class="kpi-value sm" id="cluster-label">—</div>
+        <div class="kpi-desc" id="cluster-desc">—</div>
+      </div>
+    </div>
+
+    <!-- AI Probability Alerts -->
+    <div class="alerts-section" id="alerts-section"></div>
+
+    <!-- Main Dashboard Grid -->
+    <div class="dashboard-grid">
+
+      <!-- Classification Probabilities -->
+      <div class="dash-card">
+        <div class="card-header">
+          <span class="card-icon">📊</span>
+          <h3>Classification Probabilities</h3>
+          <span class="card-tag">Bayesian</span>
+        </div>
+        <div class="prob-bars" id="prob-bars"></div>
+        <div class="confidence-row">
+          <span>Model Confidence</span>
+          <span id="model-confidence" class="confidence-value">—</span>
+        </div>
+      </div>
+
+      <!-- Weekly Usage Trend -->
+      <div class="dash-card">
+        <div class="card-header">
+          <span class="card-icon">📈</span>
+          <h3>7-Day Usage Trend</h3>
+          <span class="card-tag">Regression</span>
+        </div>
+        <div class="mini-chart" id="trend-chart"></div>
+        <div class="forecast-row" id="forecast-row"></div>
+      </div>
+
+      <!-- Health Score Breakdown -->
+      <div class="dash-card">
+        <div class="card-header">
+          <span class="card-icon">💊</span>
+          <h3>Health Score Breakdown</h3>
+          <span class="card-tag">Composite AI</span>
+        </div>
+        <div class="health-dims" id="health-dims"></div>
+        <div class="peer-row" id="peer-row"></div>
+      </div>
+
+      <!-- Rule-Based Reasoning -->
+      <div class="dash-card">
+        <div class="card-header">
+          <span class="card-icon">⚖️</span>
+          <h3>Knowledge Base Rules</h3>
+          <span class="card-tag">Prolog Logic</span>
+        </div>
+        <div class="rules-list" id="rules-list"></div>
+        <div class="rule-meta" id="rule-meta"></div>
+      </div>
+
+      <!-- Interventions -->
+      <div class="dash-card wide">
+        <div class="card-header">
+          <span class="card-icon">🤖</span>
+          <h3>AI Agent Interventions</h3>
+          <span class="card-tag">Rational Agent</span>
+        </div>
+        <div class="interventions-grid" id="interventions-grid"></div>
+      </div>
+
+      <!-- Bias Variance Monitor -->
+      <div class="dash-card">
+        <div class="card-header">
+          <span class="card-icon">⚙️</span>
+          <h3>Model Health Monitor</h3>
+          <span class="card-tag">Bias-Variance</span>
+        </div>
+        <div class="bv-monitor" id="bv-monitor"></div>
+      </div>
+
+      <!-- Key Risk Factors -->
+      <div class="dash-card">
+        <div class="card-header">
+          <span class="card-icon">🔍</span>
+          <h3>Key Risk Factors</h3>
+          <span class="card-tag">Feature Importance</span>
+        </div>
+        <div class="factors-list" id="factors-list"></div>
+      </div>
+
+    </div>
+
+    <!-- ===== SCHEDULE SECTION ===== -->
+    <div class="schedule-section" id="schedule">
+      <div class="card-header">
+        <span class="card-icon">🗓️</span>
+        <h3>AI-Optimized Daily Schedule</h3>
+        <span class="card-tag">Search Optimization</span>
+      </div>
+      <div class="schedule-meta" id="schedule-meta"></div>
+      <div class="schedule-timeline" id="schedule-timeline"></div>
+    </div>
+
+    <!-- Recommendations -->
+    <div class="recs-section">
+      <div class="card-header">
+        <span class="card-icon">💡</span>
+        <h3>Personalized Recommendations</h3>
+        <span class="card-tag">RL-Based</span>
+      </div>
+      <div class="recs-grid" id="recs-grid"></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== ABOUT ===== -->
+<section class="about-section" id="about">
+  <div class="container">
+    <div class="about-header">
+      <h2>AI Concepts Powering MindGuard</h2>
+      <p>Every feature maps to a core AI/ML concept</p>
+    </div>
+    <div class="concepts-grid">
+      <div class="concept-card"><span class="concept-icon">🧠</span><strong>Intelligent Agents</strong><p>Rational intervention agent selects optimal actions based on utility functions</p></div>
+      <div class="concept-card"><span class="concept-icon">📊</span><strong>Bayesian Classification</strong><p>Multi-level addiction classification using posterior probability updates</p></div>
+      <div class="concept-card"><span class="concept-icon">📈</span><strong>Regression Modeling</strong><p>Time-series regression predicts end-of-day and weekly usage</p></div>
+      <div class="concept-card"><span class="concept-icon">🔍</span><strong>Unsupervised Clustering</strong><p>K-Means groups users into behavioral archetypes automatically</p></div>
+      <div class="concept-card"><span class="concept-icon">⚖️</span><strong>First-Order Logic</strong><p>Prolog-style rule engine reasons over symbolic knowledge</p></div>
+      <div class="concept-card"><span class="concept-icon">🔄</span><strong>Reinforcement Learning</strong><p>Agent learns which interventions have highest reward over time</p></div>
+      <div class="concept-card"><span class="concept-icon">🎯</span><strong>Search Optimization</strong><p>Greedy local search generates optimal daily schedules</p></div>
+      <div class="concept-card"><span class="concept-icon">⚙️</span><strong>Bias-Variance Tradeoff</strong><p>Model confidence adapts based on data quantity and quality</p></div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <span class="logo-text">🧠 MindGuard AI</span>
+      <span>Built with Python · Flask · Intelligent AI · ❤️</span>
+      <span>v{{ config.version }}</span>
+    </div>
+  </div>
+</footer>
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

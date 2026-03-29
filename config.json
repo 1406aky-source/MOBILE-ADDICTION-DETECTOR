@@ -1,0 +1,58 @@
+{
+  "version": "1.0.0",
+  "app_name": "MindGuard — AI Mobile Addiction Detector",
+  "debug": true,
+  "port": 5000,
+  "secret_key_env": "MAD_SECRET_KEY",
+  "thresholds": {
+    "low_risk_hours": 2.0,
+    "moderate_risk_hours": 4.0,
+    "high_risk_hours": 6.0,
+    "severe_risk_hours": 8.0,
+    "healthy_sleep_hours": 7.5,
+    "late_night_threshold_days": 3,
+    "max_healthy_app_switches": 10
+  },
+  "model": {
+    "classifier": "bayesian_weighted",
+    "predictor": "linear_regression",
+    "clustering": "k_means_4",
+    "rule_engine": "forward_chaining",
+    "schedule_optimizer": "greedy_local_search"
+  },
+  "features": {
+    "daily_hours": true,
+    "sleep_hours": true,
+    "social_media_ratio": true,
+    "app_switch_rate": true,
+    "late_night_usage": true,
+    "productivity_ratio": true,
+    "study_app_ratio": true,
+    "gaming_ratio": true,
+    "notification_clicks": true,
+    "weekend_spike": true
+  },
+  "intervention_types": [
+    "immediate",
+    "app_control",
+    "productivity",
+    "schedule",
+    "habit",
+    "long_term",
+    "social",
+    "visual",
+    "settings"
+  ],
+  "clusters": [
+    "casual_user",
+    "social_media_addict",
+    "gamer",
+    "productivity_user"
+  ],
+  "health_score_weights": {
+    "screen_time": 0.30,
+    "sleep_quality": 0.25,
+    "productivity": 0.25,
+    "digital_balance": 0.20
+  }
+}
